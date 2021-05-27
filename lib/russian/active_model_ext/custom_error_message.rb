@@ -42,15 +42,15 @@ if defined?(ActiveModel::Errors)
       def full_messages
         full_messages = []
 
-        each do |attribute, messages|
-          messages = Array.wrap(messages)
+        each do |error|
+          messages = Array.wrap(error.message)
           next if messages.empty?
 
-          if attribute == :base
+          if error.attribute == :base
             messages.each {|m| full_messages << m }
           else
-            attr_name = attribute.to_s.gsub('.', '_').humanize
-            attr_name = @base.class.human_attribute_name(attribute, :default => attr_name)
+            attr_name = error.attribute.to_s.gsub('.', '_').humanize
+            attr_name = @base.class.human_attribute_name(error.attribute, :default => attr_name)
             options = { :attribute => attr_name, :default => "%{attribute} %{message}" }
 
             messages.each do |m|
